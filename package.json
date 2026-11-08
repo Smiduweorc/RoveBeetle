@@ -1,0 +1,85 @@
+{
+	"name": "@smiduweorc/rove-beetle-template",
+	"version": "0.0.0",
+	"description": "TypeScript skeleton for typed UTCP clients, with a generator that writes one function per tool from a UTCP manual.",
+	"type": "module",
+	"sideEffects": false,
+	"main": "dist/index.js",
+	"types": "dist/types/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/types/index.d.ts",
+			"default": "./dist/index.js"
+		},
+		"./http": {
+			"types": "./dist/types/http.d.ts",
+			"default": "./dist/http.js"
+		},
+		"./sse": {
+			"types": "./dist/types/sse.d.ts",
+			"default": "./dist/sse.js"
+		}
+	},
+	"engines": {
+		"node": ">=22"
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsc",
+		"typecheck": "tsc --noEmit && tsc --noEmit -p tests/tsconfig.json",
+		"lint": "eslint .",
+		"lint:fix": "eslint . --fix",
+		"generate": "tsx tools/generator/cli.ts",
+		"test": "node --import tsx --test --test-timeout=180000 \"tests/**/*.test.ts\"",
+		"test:dist": "npm run build && node --test \"tests/dist/*.test.js\"",
+		"docs": "typedoc",
+		"changelog": "git-cliff -o CHANGELOG.md",
+		"prepare": "lefthook install",
+		"test:bun": "bun test --timeout 15000 tests/runtime tests/attacks/cli.test.ts",
+		"test:dist:bun": "bun test tests/dist"
+	},
+	"keywords": [
+		"typescript",
+		"esm",
+		"template",
+		"utcp",
+		"tool-calling",
+		"api-client",
+		"codegen",
+		"mcp"
+	],
+	"author": "",
+	"license": "ISC",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Smiduweorc/RoveBeetle"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^21.2.4",
+		"@commitlint/config-conventional": "^21.2.4",
+		"@eslint/js": "^10.0.1",
+		"@modelcontextprotocol/sdk": "^1.32.2",
+		"@types/node": "^26.6.6",
+		"@types/ws": "^8.18.2",
+		"eslint": "^10.14.0",
+		"fast-check": "^4.10.2",
+		"git-cliff": "^2.14.2",
+		"graphql": "^17.1.0",
+		"graphql-ws": "^6.4.1",
+		"lefthook": "^2.2.2",
+		"openapi-typescript": "^7.13.0",
+		"tsx": "^4.23.15",
+		"typedoc": "^0.28.20",
+		"typescript": "^6.0.3",
+		"typescript-eslint": "^8.72.1",
+		"ws": "^8.22.1",
+		"yaml": "^2.9.1"
+	},
+	"overrides": {
+		"openapi-typescript": {
+			"typescript": "$typescript"
+		}
+	}
+}

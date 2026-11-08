@@ -1,0 +1,111 @@
+name: CI
+
+on:
+  push:
+    branches: [master, dev]
+    paths-ignore:
+      - "**.md"
+  pull_request:
+    branches: [master]
+    paths-ignore:
+      - "**.md"
+  workflow_dispatch:
+
+# Cancel superseded runs on the same ref to save CI minutes.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Lint, Test & Build (${{ matrix.os }}, node ${{ matrix.node-version }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [22.x, 24.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build project
+        run: npm run build
+
+      - name: Test the built artifact
+        run: npm run test:dist
+
+      - name: Generate API docs
+        if: matrix.os == 'ubuntu-latest' && matrix.node-version == '22.x'
+        run: npm run docs
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v7
+        if: matrix.os == 'ubuntu-latest' && matrix.node-version == '22.x'
+        with:
+          name: dist
+          path: dist/
+
+  bun:
+    # The runtime and the built package, under Bun. The generator is a
+    # build-time tool and runs on Node only, so the tests under
+    # tests/generator are not part of this job.
+    name: Bun ${{ matrix.bun-version }} (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        bun-version: [1.4.4, latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      # npm installs from the one lockfile; Bun only runs the tests.
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24.x
+          cache: npm
+
+      - name: Setup Bun ${{ matrix.bun-version }}
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ matrix.bun-version }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Runtime tests
+        run: npm run test:bun
+
+      - name: Build project
+        run: npm run build
+
+      - name: Test the built artifact
+        run: npm run test:dist:bun

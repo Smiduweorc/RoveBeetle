@@ -1,0 +1,25 @@
+{
+	"$schema": "https://typedoc.org/schema.json",
+	"entryPoints": [
+		"index.ts",
+		"http.ts",
+		"sse.ts",
+		"streamable-http.ts",
+		"graphql.ts",
+		"websocket.ts",
+		"tcp.ts",
+		"udp.ts",
+		"mcp.ts",
+		"cli.ts",
+		"text.ts",
+		"file.ts"
+	],
+	"out": "docs",
+	"includeVersion": true,
+	"excludePrivate": true,
+	"excludeInternal": true,
+	"readme": "README.md",
+	"intentionallyNotExported": [
+		"components"
+	]
+}
