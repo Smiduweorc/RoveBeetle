@@ -79,3 +79,5 @@ Licence: ISC.
 Many rove beetles live as guests in ant and termite nests. They copy the
 colony's chemical signals, so the hosts feed them. RoveBeetle speaks whichever
 of UTCP's eleven protocols a tool uses.
+
+This project was made for some bun web server and LLM clients.
