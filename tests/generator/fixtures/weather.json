@@ -1,0 +1,51 @@
+{
+	"utcp_version": "1.1.0",
+	"manual_version": "1.0.0",
+	"tools": [
+		{
+			"name": "get_forecast",
+			"description": "The forecast for a city.",
+			"inputs": {
+				"type": "object",
+				"properties": {
+					"city": { "type": "string" },
+					"days": { "type": "integer", "minimum": 1, "maximum": 14 }
+				},
+				"required": ["city"]
+			},
+			"outputs": {
+				"type": "object",
+				"properties": {
+					"city": { "type": "string" },
+					"days": { "type": "array", "items": { "$ref": "#/$defs/day" } }
+				},
+				"required": ["city", "days"],
+				"$defs": {
+					"day": {
+						"type": "object",
+						"properties": { "date": { "type": "string" }, "high": { "type": "number" }, "low": { "type": "number" } },
+						"required": ["date", "high", "low"]
+					}
+				}
+			},
+			"tool_call_template": {
+				"call_template_type": "http",
+				"url": "https://api.example.com/v1/forecast/{city}",
+				"http_method": "GET",
+				"auth": { "auth_type": "api_key", "api_key": "${WEATHER_API_KEY}", "var_name": "X-Api-Key", "location": "header" }
+			}
+		},
+		{
+			"name": "watch_alerts",
+			"description": "Weather alerts as they are issued.",
+			"inputs": { "type": "object", "properties": { "region": { "type": "string" } } },
+			"outputs": { "type": "array", "items": { "type": "object", "properties": { "level": { "type": "string", "enum": ["advisory", "watch", "warning"] }, "text": { "type": "string" } }, "required": ["level", "text"] } },
+			"tool_call_template": {
+				"call_template_type": "sse",
+				"url": "https://api.example.com/v1/alerts",
+				"event_type": "alert",
+				"auth": { "auth_type": "oauth2", "token_url": "https://auth.example.com/token", "client_id": "${CLIENT_ID}", "client_secret": "${CLIENT_SECRET}", "scope": "alerts:read" }
+			}
+		}
+	]
+}
