@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.0] - 2026-11-09
+
+### Documentation
+
+- Added some lore
+
+### Miscellaneous Tasks
+
+- Update README
+
 ## [1.0.0] - 2026-11-08
 
 ### Documentation
