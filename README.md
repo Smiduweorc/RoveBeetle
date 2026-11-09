@@ -6,10 +6,6 @@ A TypeScript template for publishing a typed client for a set of UTCP tools.
 The generator reads a UTCP manual and writes one function per tool, and a
 client given the wrong credentials does not compile.
 
-Status: not released. All eleven protocols and the generator are written and
-tested under Node 26 and Bun 1.4.4 on Linux. Windows and macOS run in CI,
-which has not run yet.
-
 The published client needs Node 22 or later, or Bun 1.4.4 or later.
 `npm run generate` needs Node.
 
