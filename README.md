@@ -9,6 +9,8 @@ client given the wrong credentials does not compile.
 The published client needs Node 22 or later, or Bun 1.4.4 or later.
 `npm run generate` needs Node.
 
+> There are known issues regarding the usage of rove beetle on windows. We intend to fix this first, avoid using rove beetle for now till we give the all clear (if you are on windows).
+
 ## Start
 
 1. Copy this repository, `git init`, then `npm install`.
