@@ -63,7 +63,7 @@
 		"@modelcontextprotocol/sdk": "^1.32.2",
 		"@types/node": "^26.6.6",
 		"@types/ws": "^8.18.2",
-		"eslint": "^10.14.0",
+		"eslint": "^10.15.0",
 		"fast-check": "^4.10.2",
 		"git-cliff": "^2.14.2",
 		"graphql": "^17.1.0",
