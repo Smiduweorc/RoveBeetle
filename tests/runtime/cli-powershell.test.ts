@@ -71,6 +71,12 @@ if (process.platform === "win32") {
 			assert.equal(await secretClient.call(call([step("if ($env:ROVE_SECRET) { 'leaked' } else { 'clean' }")])), "clean");
 		});
 
+		test("inherited names match whatever case the host spells them in", async () => {
+			const lower = Object.fromEntries(Object.entries(process.env).map(([key, value]) => [key.toLowerCase(), value]));
+			const lowerClient = new CliClient({ variables: {}, environment: lower, maxResponseBytes: 4096 });
+			assert.equal(await lowerClient.call(call([step("if ($env:PATH -and $env:SYSTEMROOT) { 'ok' } else { 'missing' }")])), "ok");
+		});
+
 		for (const payload of PAYLOADS) {
 			for (const [name, command, wrap] of [
 				["bare", "Write-Output UTCP_ARG_value_UTCP_END", (value: string): string => value],

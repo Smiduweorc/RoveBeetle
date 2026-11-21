@@ -9,7 +9,7 @@ import { mediaType, send } from "../request.js";
 import { HTTP_SCHEMES, secureUrl } from "../secure.js";
 import { Session, type ClientOptions } from "../session.js";
 import { readEvents } from "../sse.js";
-import { DEFAULT_INHERITED } from "../environment.js";
+import { DEFAULT_INHERITED, lookupEnv } from "../environment.js";
 
 /** Options for an {@link McpClient}. `maxResponseBytes` bounds each message from a server. */
 export interface McpClientOptions<TVariables extends string> extends ClientOptions<TVariables>, ResponseLimit {
@@ -206,7 +206,7 @@ async function stdioTransport(
 
 	const env: Record<string, string> = {};
 	for (const name of DEFAULT_INHERITED[windows ? "windows" : "unix"]) {
-		const value = environment[name];
+		const value = lookupEnv(environment, name, windows);
 		if (value !== undefined) {
 			env[name] = value;
 		}

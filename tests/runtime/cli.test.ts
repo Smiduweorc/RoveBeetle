@@ -6,7 +6,7 @@ import { after, before, describe, test } from "node:test";
 
 import type { CliCommand, CliTemplate, ToolCall } from "../../src/call.js";
 import { RoveError } from "../../src/errors.js";
-import { DEFAULT_INHERITED } from "../../src/environment.js";
+import { DEFAULT_INHERITED, lookupEnv } from "../../src/environment.js";
 import { CliClient } from "../../src/protocols/cli.js";
 import { buildScript } from "../../src/script.js";
 
@@ -194,3 +194,23 @@ if (process.platform !== "win32") {
 		});
 	});
 }
+
+describe("lookupEnv", () => {
+	const environment = { Path: "C:\\bin", SystemRoot: "C:\\Windows", EMPTY: undefined };
+
+	test("on Windows a name matches whatever case the host spelled it in", () => {
+		assert.equal(lookupEnv(environment, "PATH", true), "C:\\bin");
+		assert.equal(lookupEnv(environment, "SYSTEMROOT", true), "C:\\Windows");
+	});
+
+	test("elsewhere the name must match exactly", () => {
+		assert.equal(lookupEnv(environment, "PATH", false), undefined);
+		assert.equal(lookupEnv(environment, "Path", false), "C:\\bin");
+	});
+
+	test("an exact match wins, and absent or undefined values are undefined", () => {
+		assert.equal(lookupEnv({ PATH: "exact", Path: "other" }, "PATH", true), "exact");
+		assert.equal(lookupEnv(environment, "MISSING", true), undefined);
+		assert.equal(lookupEnv(environment, "empty", true), undefined);
+	});
+});

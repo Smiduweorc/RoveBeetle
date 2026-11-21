@@ -25,6 +25,8 @@ export class FileClient<TVariables extends string = never> {
 	readonly #session: Session;
 	readonly #limit: number;
 	readonly #root: string;
+	/** `root` was `"/"`: every path, on every drive. */
+	readonly #anywhere: boolean;
 	#realRoot: Promise<string> | undefined;
 
 	constructor(options: FileClientOptions<TVariables>) {
@@ -35,6 +37,8 @@ export class FileClient<TVariables extends string = never> {
 				code: "unsupported_value",
 			});
 		}
+		// On Windows "/" resolves to the current drive only; it means any path.
+		this.#anywhere = options.root === "/";
 		this.#root = resolve(options.root instanceof URL ? fileURLToPath(options.root) : options.root);
 	}
 
@@ -111,6 +115,9 @@ export class FileClient<TVariables extends string = never> {
 	}
 
 	#confine(root: string, path: string, named: string, tool: string): void {
+		if (this.#anywhere) {
+			return;
+		}
 		const inside = relative(root, path);
 		if (inside === ".." || inside.startsWith(`..${sep}`) || isAbsolute(inside)) {
 			throw new RoveError(`${named} resolves outside the client's root, ${this.#root}`, {

@@ -17,3 +17,22 @@ export const DEFAULT_INHERITED: Readonly<Record<"unix" | "windows", readonly str
 		"USERDNSDOMAIN",
 	],
 };
+
+/**
+ * `name`'s value in `environment`. On Windows variable names are
+ * case-insensitive, but a plain copy of `process.env` keeps the host's
+ * spelling (`Path`, `SystemRoot`), so the lookup ignores case there.
+ */
+export function lookupEnv(environment: Readonly<Record<string, string | undefined>>, name: string, windows: boolean): string | undefined {
+	const exact = environment[name];
+	if (exact !== undefined || !windows) {
+		return exact;
+	}
+	const upper = name.toUpperCase();
+	for (const [key, value] of Object.entries(environment)) {
+		if (value !== undefined && key.toUpperCase() === upper) {
+			return value;
+		}
+	}
+	return undefined;
+}

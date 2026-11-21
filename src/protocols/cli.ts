@@ -8,7 +8,7 @@ import { RoveError } from "../errors.js";
 import { checkLimit, tooLarge, utf8, type ResponseLimit } from "../limit.js";
 import { concat } from "../payload.js";
 import { buildScript, type Shell } from "../script.js";
-import { DEFAULT_INHERITED } from "../environment.js";
+import { DEFAULT_INHERITED, lookupEnv } from "../environment.js";
 import { Session, type ClientOptions } from "../session.js";
 
 /** Options for a {@link CliClient}. `maxResponseBytes` bounds the command's output. */
@@ -70,7 +70,7 @@ export class CliClient<TVariables extends string = never> {
 		const inherited = template.inheritEnvVars ?? DEFAULT_INHERITED[windows ? "windows" : "unix"];
 		const env: Record<string, string> = {};
 		for (const name of inherited) {
-			const value = this.#environment[name];
+			const value = lookupEnv(this.#environment, name, windows);
 			if (value !== undefined) {
 				env[name] = value;
 			}

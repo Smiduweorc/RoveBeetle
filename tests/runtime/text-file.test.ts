@@ -80,6 +80,13 @@ describe("file calls", () => {
 		assert.equal(await client({ root: "/" }).call(read(join(tmpdir(), "rovebeetle-outside.txt"))), "secret");
 	});
 
+	test("a root of / reaches other drives too", { skip: process.platform !== "win32" }, async () => {
+		// "/" resolves to the current drive; a path on another one must not be
+		// refused as outside the root, only fail to open if it is not there.
+		const drive = process.cwd()[0]?.toUpperCase() === "Z" ? "Y" : "Z";
+		await assert.rejects(client({ root: "/" }).call(read(`${drive}:\\rovebeetle-missing.txt`)), isCode("transport_failed"));
+	});
+
 	test("a file over maxResponseBytes is protocol_error, and one at the limit is read", async () => {
 		await assert.rejects(client({ maxResponseBytes: 99 }).call(read("big.txt")), isCode("protocol_error"));
 		assert.equal((await client({ maxResponseBytes: 100 }).call(read("big.txt"))).length, 100);
