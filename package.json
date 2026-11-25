@@ -64,7 +64,7 @@
 		"@types/node": "^26.6.6",
 		"@types/ws": "^8.18.2",
 		"eslint": "^10.15.0",
-		"fast-check": "^4.10.3",
+		"fast-check": "^4.11.0",
 		"git-cliff": "^2.14.2",
 		"graphql": "^17.1.0",
 		"graphql-ws": "^6.4.3",
