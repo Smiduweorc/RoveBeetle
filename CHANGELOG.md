@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.1] - 2026-11-27
+
+### Bug Fixes
+
+- Corrected issue where windows and casing broke tests
+
+### Documentation
+
+- Added disclaimer for windows usage and rove beetle
+
+### Miscellaneous Tasks
+
+- Bump ci
+- Add ISC license
+
 ## [0.1.0] - 2026-11-09
 
 ### Documentation

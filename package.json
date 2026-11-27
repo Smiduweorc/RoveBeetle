@@ -1,6 +1,6 @@
 {
 	"name": "@smiduweorc/rove-beetle-template",
-	"version": "0.1.0",
+	"version": "1.0.1",
 	"description": "TypeScript skeleton for typed UTCP clients, with a generator that writes one function per tool from a UTCP manual.",
 	"type": "module",
 	"sideEffects": false,
@@ -48,7 +48,8 @@
 		"tool-calling",
 		"api-client",
 		"codegen",
-		"mcp"
+		"mcp",
+		"smiduweorc"
 	],
 	"author": "",
 	"license": "ISC",
